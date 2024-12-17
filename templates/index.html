@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sulama Sistemi Ana Sayfa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Sulama Sistemi Ana Sayfa</h1>
+    <p>Aşağıdaki bağlantılardan ilgili verilere ve grafiğe erişebilirsiniz:</p>
+
+    <div class="links">
+        <a href="/data" target="_blank">Veri Setini Göster</a>
+        <a href="/graph/soil-moisture" target="_blank">Toprak Nemi Grafiğini Göster</a>
+        <a href="/irrigation" target="_blank">Sulama Durumunu Göster</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
