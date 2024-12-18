@@ -5,9 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import io
 from base64 import b64encode
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 # Veri setini yükleme
 data = pd.read_excel("realistic_all_veri_seti.xlsx")
 
