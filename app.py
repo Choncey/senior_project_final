@@ -8,6 +8,7 @@ from base64 import b64encode
 from flask_cors import CORS
 
 
+
 app = Flask(__name__)
 CORS(app)
 # Veri setini yükleme
