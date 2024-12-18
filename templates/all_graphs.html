@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tüm Grafikler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Tüm Grafikler</h1>
+    {% for title, graph in graphs.items() %}
+        <h2>{{ title }}</h2>
+        <img src="{{ graph }}" alt="{{ title }}" style="max-width: 90%; margin-bottom: 20px;">
+    {% endfor %}
+</body>
+</html>
