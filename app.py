@@ -6,11 +6,21 @@ import matplotlib.pyplot as plt
 import io
 from base64 import b64encode
 from flask_cors import CORS
+import requests
+import joblib
+from sklearn.preprocessing import StandardScaler
+# Modeli ve Scaler'ı Yükle
+import pickle
 
+with open("trained_model.pkl", "rb") as model_file:
+    model = pickle.load(model_file)
 
+with open("scaler.pkl", "rb") as scaler_file:
+    scaler = pickle.load(scaler_file)
 
 app = Flask(__name__)
 CORS(app)
+
 # Veri setini yükleme
 data = pd.read_excel("realistic_all_veri_seti.xlsx")
 
@@ -68,7 +78,6 @@ def graph_all():
     # JSON olarak döndür
     return jsonify(encoded_graphs)
 
-
 # Sulama Durumu Endpoint'i
 @app.route("/irrigation", methods=["GET"])
 def get_irrigation_status():
@@ -81,6 +90,62 @@ def get_irrigation_status():
             "Sebep": reason
         })
     return jsonify(results)
+
+# Thingspeak API ile veri alma ve modeli entegre etme
+@app.route("/thingspeak", methods=["GET"])
+def get_thingspeak_data_and_predict():
+    try:
+        # Thingspeak API URL
+        api_url = "https://api.thingspeak.com/channels/2736785/feeds.json?api_key=RE1I0AGF14BCQZLD&results=10"
+        response = requests.get(api_url)
+        response.raise_for_status()
+        thingspeak_data = response.json()
+
+        # Son 10 veriyi formatlama
+        formatted_data = [
+            {
+                "time": feed["created_at"],
+                "ToprakNemi(%)": float(feed["field4"]),
+                "HavaSicakligi(Â°C)": float(feed["field2"]),
+                "HavaNemi(%)": float(feed["field1"]),
+                "IsikYogunlugu(lux)": float(feed["field3"]),
+            }
+            for feed in thingspeak_data.get("feeds", []) if feed["field1"] and feed["field2"] and feed["field3"] and feed["field4"]
+        ]
+
+        if len(formatted_data) < 10:
+            return jsonify({"status": "error", "message": "Yeterli veri yok (10 veri gerekli)."})
+
+        # Tahmin için veri çerçevesi oluşturma
+        test_samples = pd.DataFrame(formatted_data)
+
+        # Özellik adlarını eşitle
+        test_samples = test_samples[['ToprakNemi(%)', 'HavaSicakligi(Â°C)', 'HavaNemi(%)', 'IsikYogunlugu(lux)']]
+        timestamps = [item["time"] for item in formatted_data]
+
+        # Ölçeklendirme
+        test_samples_scaled = scaler.transform(test_samples)
+
+        # Tahmin ve olasılık hesaplama
+        predictions = model.predict(test_samples_scaled)
+        probabilities = model.predict_proba(test_samples_scaled)[:, 1]  # Sadece "Sulama Gerekli" olasılığı
+
+        # Zaman, tahmin ve olasılık sonuçlarını formatla
+        prediction_results = [
+            {
+                "time": timestamps[idx],
+                "SulamaDurumu": "Sulama Gerekli" if predictions[idx] == 1 else "Sulama Gereksiz",
+                "Probability": round(probabilities[idx] * 100, 2)  # Yüzdelik formatta olasılık
+            }
+            for idx in range(len(predictions))
+        ]
+
+        return jsonify({"status": "success", "predictions": prediction_results})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
