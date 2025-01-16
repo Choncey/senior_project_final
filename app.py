@@ -59,9 +59,15 @@ def graph_all():
         "Işık Yoğunluğu": create_graph(data["IsikYogunlugu(lux)"], "Işık Yoğunluğu (lux)", "Işık Yoğunluğu Grafiği", "orange")
     }
 
-    # Grafikleri base64 formatına dönüştür
-    encoded_graphs = {title: f"data:image/png;base64,{b64encode(img.read()).decode()}" for title, img in graphs.items()}
-    return render_template("all_graphs.html", graphs=encoded_graphs)
+    # Grafikleri base64 formatına dönüştür ve JSON olarak hazırla
+    encoded_graphs = {
+        title: f"data:image/png;base64,{b64encode(img.read()).decode()}"
+        for title, img in graphs.items()
+    }
+
+    # JSON olarak döndür
+    return jsonify(encoded_graphs)
+
 
 # Sulama Durumu Endpoint'i
 @app.route("/irrigation", methods=["GET"])

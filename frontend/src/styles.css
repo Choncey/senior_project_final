@@ -1,0 +1,63 @@
+/* Genel Stil */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+  
+  /* Ana Başlık */
+  h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #212529;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Alt Başlık */
+  h2 {
+    font-weight: 400;
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Container */
+  .container {
+    padding: 20px;
+  }
+  
+  /* Kartların Ortak Stili */
+  .card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Görsel */
+  .img-fluid {
+    max-height: 300px;
+    object-fit: contain;
+    cursor: pointer;
+  }
+  
+  /* Resim Büyütme Efekti */
+  .img-fluid:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
+  
+  /* Footer */
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #777;
+  }
+  

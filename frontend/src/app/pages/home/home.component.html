@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akıllı Sulama Sistemi</title>
+  <style>
+    /* Genel Stil */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    /* Header */
+    .header {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    /* Kart Alanı */
+    .cards {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 3rem auto;
+      max-width: 1200px;
+      gap: 2rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 2rem;
+      width: 300px;
+      cursor: pointer; /* Kartları tıklanabilir yapar */
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(-10px);
+    }
+
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .card img {
+      width: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: #ddd;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>Akıllı Sulama Sistemi</h1>
+    <p>Verilerinizi analiz edin, görselleştirin ve sulama durumunu kontrol edin.</p>
+  </div>
+
+  <!-- Kartlar -->
+  <div class="cards">
+    <!-- Veri Seti -->
+    <a href="/data" class="card">
+      <img src="https://img.icons8.com/fluency/96/000000/plant-under-sun.png" alt="Veri Seti">
+      <h3>Veri Seti</h3>
+      <p>Toprak nemi, sıcaklık ve ışık yoğunluğu verilerini detaylı inceleyin.</p>
+    </a>
+
+    <!-- Grafikler -->
+    <a href="/graph" class="card">
+      <img src="https://img.icons8.com/fluency/96/000000/combo-chart.png" alt="Grafikler">
+      <h3>Grafikler</h3>
+      <p>Toprak nemi, sıcaklık ve ışık yoğunluğu grafiklerini görselleştirin.</p>
+    </a>
+
+    <!-- Sulama Durumu -->
+    <a href="/irrigation" class="card">
+      <img src="https://img.icons8.com/fluency/96/000000/watering-can.png" alt="Sulama Durumu">
+      <h3>Sulama Durumu</h3>
+      <p>Toprağın sulama gereksinimlerini analiz edin ve kontrol edin.</p>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2024 Akıllı Sulama Sistemi | Tüm Hakları Saklıdır
+  </footer>
+</body>
+</html>

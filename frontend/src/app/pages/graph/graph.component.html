@@ -1,0 +1,43 @@
+<div class="container mt-5">
+    <h1 class="mb-4">Tüm Grafikler</h1>
+  
+    <div class="row">
+      <!-- Toprak Nemi -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <h3 class="text-primary text-center mt-2">Toprak Nemi</h3>
+          <img [src]="soilGraphUrl" class="img-fluid" alt="Toprak Nemi" (click)="openImage(soilGraphUrl)">
+        </div>
+      </div>
+  
+      <!-- Hava Sıcaklığı -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <h3 class="text-danger text-center mt-2">Hava Sıcaklığı</h3>
+          <img [src]="temperatureGraphUrl" class="img-fluid" alt="Hava Sıcaklığı" (click)="openImage(temperatureGraphUrl)">
+        </div>
+      </div>
+  
+      <!-- Hava Nemi -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <h3 class="text-success text-center mt-2">Hava Nemi</h3>
+          <img [src]="humidityGraphUrl" class="img-fluid" alt="Hava Nemi" (click)="openImage(humidityGraphUrl)">
+        </div>
+      </div>
+  
+      <!-- Işık Yoğunluğu -->
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <h3 class="text-warning text-center mt-2">Işık Yoğunluğu</h3>
+          <img [src]="lightGraphUrl" class="img-fluid" alt="Işık Yoğunluğu" (click)="openImage(lightGraphUrl)">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Görsel Büyütme -->
+  <div *ngIf="modalImage" class="modal" (click)="closeImage()">
+    <img [src]="modalImage" class="modal-content">
+  </div>
+  
