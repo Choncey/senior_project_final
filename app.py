@@ -1,6 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend
-from flask import Flask, jsonify, render_template, send_file
+from flask import Flask, jsonify, render_template, send_file, request
 import pandas as pd
 import matplotlib.pyplot as plt
 import io
@@ -12,17 +12,23 @@ from sklearn.preprocessing import StandardScaler
 # Modeli ve Scaler'ı Yükle
 import pickle
 
-with open("trained_model.pkl", "rb") as model_file:
+with open("xgb_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
 
-with open("scaler.pkl", "rb") as scaler_file:
+with open("xgb_scaler.pkl", "rb") as scaler_file:
     scaler = pickle.load(scaler_file)
+
+with open("regression_model.pkl", "rb") as f:
+    litre_model = pickle.load(f)
+with open("regression_scaler.pkl", "rb") as f:
+    litre_scaler = pickle.load(f)
+
 
 app = Flask(__name__)
 CORS(app)
 
 # Veri setini yükleme
-data = pd.read_excel("realistic_all_veri_seti.xlsx")
+data = pd.read_excel("veri_seti_1yil.xlsx")
 
 # Sulama algoritması
 def irrigation_algorithm(row):
@@ -93,58 +99,91 @@ def get_irrigation_status():
 
 # Thingspeak API ile veri alma ve modeli entegre etme
 @app.route("/thingspeak", methods=["GET"])
-def get_thingspeak_data_and_predict():
+def get_thingspeak_predictions():
     try:
-        # Thingspeak API URL
+        
+        # API'den veri çek
         api_url = "https://api.thingspeak.com/channels/2736785/feeds.json?api_key=RE1I0AGF14BCQZLD&results=10"
         response = requests.get(api_url)
         response.raise_for_status()
         thingspeak_data = response.json()
 
-        # Son 10 veriyi formatlama
-        formatted_data = [
-            {
-                "time": feed["created_at"],
-                "ToprakNemi(%)": float(feed["field4"]),
-                "HavaSicakligi(Â°C)": float(feed["field2"]),
-                "HavaNemi(%)": float(feed["field1"]),
-                "IsikYogunlugu(lux)": float(feed["field3"]),
-            }
-            for feed in thingspeak_data.get("feeds", []) if feed["field1"] and feed["field2"] and feed["field3"] and feed["field4"]
-        ]
+        # Verileri çekip uygun formata getir
+        formatted_data = []
+        for feed in thingspeak_data["feeds"]:
+            if all([feed.get(f"field{i}") for i in range(1, 8)]):
+                formatted_data.append({
+                    "time": feed["created_at"],
+                    "ToprakNemi(%)": float(feed["field4"]),
+                    "HavaSicakligi(°C)": float(feed["field2"]),
+                    "HavaNemi(%)": float(feed["field1"]),
+                    "IsikYogunlugu(lux)": float(feed["field3"]),
+                    "R": float(feed["field5"]) * 255 / 1024,
+                    "G": float(feed["field6"]) * 255 / 1024,
+                    "B": float(feed["field7"]) * 255 / 1024
+                })
 
-        if len(formatted_data) < 10:
-            return jsonify({"status": "error", "message": "Yeterli veri yok (10 veri gerekli)."})
+        # Veri çerçevesi oluştur
+        df = pd.DataFrame(formatted_data)
 
-        # Tahmin için veri çerçevesi oluşturma
-        test_samples = pd.DataFrame(formatted_data)
+        # Sadece gerekli sütunları al
+        features = ['ToprakNemi(%)', 'HavaSicakligi(°C)', 'HavaNemi(%)', 'IsikYogunlugu(lux)', 'R', 'G', 'B']
+        X = df[features]
+        timestamps = df["time"].tolist()
 
-        # Özellik adlarını eşitle
-        test_samples = test_samples[['ToprakNemi(%)', 'HavaSicakligi(Â°C)', 'HavaNemi(%)', 'IsikYogunlugu(lux)']]
-        timestamps = [item["time"] for item in formatted_data]
+        # Ölçekle
+        X_scaled = scaler.transform(X)
 
-        # Ölçeklendirme
-        test_samples_scaled = scaler.transform(test_samples)
+        # Tahmin ve olasılık
+        predictions = model.predict(X_scaled)
+        probabilities = model.predict_proba(X_scaled)[:, 1]
 
-        # Tahmin ve olasılık hesaplama
-        predictions = model.predict(test_samples_scaled)
-        probabilities = model.predict_proba(test_samples_scaled)[:, 1]  # Sadece "Sulama Gerekli" olasılığı
+        # Sonuçları hazırla
+        results = []
+        for i in range(len(predictions)):
+            results.append({
+                "time": timestamps[i],
+                "SulamaDurumu": "Sulama Gerekli" if predictions[i] == 1 else "Sulama Gereksiz",
+                "Olasilik": float(round(probabilities[i] * 100, 2))
+            })
 
-        # Zaman, tahmin ve olasılık sonuçlarını formatla
-        prediction_results = [
-            {
-                "time": timestamps[idx],
-                "SulamaDurumu": "Sulama Gerekli" if predictions[idx] == 1 else "Sulama Gereksiz",
-                "Probability": round(probabilities[idx] * 100, 2)  # Yüzdelik formatta olasılık
-            }
-            for idx in range(len(predictions))
-        ]
+        return jsonify({"status": "success", "predictions": results})
 
-        return jsonify({"status": "success", "predictions": prediction_results})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route("/predict_litre", methods=["POST"])
+def predict_litre():
+    try:
+        # JSON'dan veriyi al
+        content = request.get_json()
 
+        # Gerekli alanları kontrol et
+        required_keys = ["ToprakNemi(%)", "HavaSicakligi(°C)", "HavaNemi(%)", "IsikYogunlugu(lux)"]
+        if not all(key in content for key in required_keys):
+            return jsonify({"status": "error", "message": "Eksik veri alanları"}), 400
+
+        # Girdi örneğini oluştur
+        test_sample = [[
+            content["ToprakNemi(%)"],
+            content["HavaSicakligi(°C)"],
+            content["HavaNemi(%)"],
+            content["IsikYogunlugu(lux)"]
+        ]]
+
+        # Ölçeklendir
+        test_sample_scaled = litre_scaler.transform(test_sample)
+
+        # Tahmin yap ve float'a dönüştür
+        predicted_litre = float(litre_model.predict(test_sample_scaled)[0])
+
+        return jsonify({
+            "status": "success",
+            "TahminiSuMiktari(Litre)": predicted_litre
+        })
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 if __name__ == "__main__":
