@@ -1,6 +1,33 @@
-<h2>Veri Seti</h2>
-<ul>
-  <li *ngFor="let item of data">
-    {{ item.TarihSaat }}: {{ item['ToprakNemi(%)'] }}%
-  </li>
-</ul>
+<div class="dataset-wrapper">
+  <h1>
+    <img src="https://cdn-icons-png.flaticon.com/512/1143/1143979.png" alt="Smart Farm Icon" class="icon">
+    Güncel Sensör Verileri
+  </h1>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tarih</th>
+        <th>Toprak Nemi (%)</th>
+        <th>Hava Sıcaklığı (°C)</th>
+        <th>Hava Nemi (%)</th>
+        <th>Işık (lux)</th>
+        <th>Yaprak Rengi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of dataset">
+        <td>{{ row['TarihSaat'] }}</td>
+        <td>{{ row['ToprakNemi(%)'] | number:'1.0-2' }}</td>
+        <td>{{ row['HavaSicakligi(°C)'] | number:'1.1-2' }}</td>
+        <td>{{ row['HavaNemi(%)'] | number:'1.0-1' }}</td>
+        <td>{{ row['IsikYogunlugu(lux)'] | number:'1.0-0' }}</td>
+        <td>
+          <div class="color-box"
+               [ngStyle]="{'background-color': getColor(row['YaprakRengi'])}">
+            {{ row['YaprakRengi'] }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

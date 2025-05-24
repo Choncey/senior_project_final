@@ -10,13 +10,20 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class IrrigationComponent implements OnInit {
-  irrigation: any[] = [];
+  predictions: any[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.apiService.getIrrigation().subscribe((response) => {
-      this.irrigation = response;
+    this.apiService.getIrrigation().subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.predictions = res.predictions;
+        }
+      },
+      error: (err) => {
+        console.error('Tahmin verisi alınamadı:', err);
+      }
     });
   }
 }

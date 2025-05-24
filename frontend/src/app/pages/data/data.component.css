@@ -1,15 +1,58 @@
-h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
-  
+.dataset-wrapper {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dataset-wrapper h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.data-table th {
+  background: linear-gradient(to right, #00695c, #00897b);
+  color: white;
+  padding: 12px;
+  text-align: center;
+}
+
+.data-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.data-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.color-box {
+  width: 100px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  margin: auto;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+  vertical-align: middle;
+}

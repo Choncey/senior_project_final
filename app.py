@@ -8,6 +8,8 @@ from base64 import b64encode
 from flask_cors import CORS
 import requests
 import pickle
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 
 # MODELLERİ YÜKLE
 with open("xgb_model.pkl", "rb") as model_file:
@@ -38,15 +40,43 @@ def get_data():
 
 # GRAFİK OLUŞTUR
 def create_graph(y_data, y_label, title, color):
-    plt.figure(figsize=(10, 5))
-    plt.plot(data["TarihSaat"][-100:], y_data[-100:], label=title, color=color)
+    plt.style.use('ggplot')  # Modern ve sade stil
+    fig, ax = plt.subplots(figsize=(14, 6))
 
-    plt.xlabel("Tarih Saat")
-    plt.ylabel(y_label)
-    plt.title(title)
-    plt.legend()
+    # Son 100 veriyi al (gerekirse artır)
+    x_data = pd.to_datetime(data["TarihSaat"][-100:])
+    y_data = y_data[-100:]
+
+    # Grafik çizimi
+    ax.plot(x_data, y_data, label=title, color=color, linewidth=2, marker='o', markersize=4)
+
+    # Başlık ve etiketler
+    ax.set_title(title, fontsize=16, fontweight='bold', pad=15)
+    ax.set_xlabel("Tarih - Saat", fontsize=12)
+    ax.set_ylabel(y_label, fontsize=12)
+
+    # X ekseni formatı ve yoğunluğa göre gösterim
+    ax.set_xlim([x_data.min(), x_data.max()])
+    if len(x_data) > 60:
+        ax.xaxis.set_major_locator(mdates.HourLocator(interval=1))
+    elif len(x_data) > 100:
+        ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=30))
+    else:
+        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m %H:%M'))
+    fig.autofmt_xdate(rotation=30)
+
+    # Stil detayları
+    ax.legend(loc='upper right')
+    ax.grid(True, linestyle='--', alpha=0.5)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    # Görseli base64 olarak döndür
+    plt.tight_layout()
     img = io.BytesIO()
-    plt.savefig(img, format="png")
+    plt.savefig(img, format="png", dpi=150, bbox_inches='tight')
     img.seek(0)
     plt.close()
     return img
@@ -77,7 +107,7 @@ def get_thingspeak_predictions():
 
         formatted_data = []
         for feed in thingspeak_data["feeds"]:
-            if all([feed.get(f"field{i}") for i in range(1, 8)]):
+            if all(feed.get(f"field{i}") for i in range(1, 8)):
                 formatted_data.append({
                     "time": feed["created_at"],
                     "ToprakNemi(%)": float(feed["field4"]),
@@ -89,15 +119,20 @@ def get_thingspeak_predictions():
                     "B": float(feed["field7"]) * 255 / 1024
                 })
 
+        if not formatted_data:
+            return jsonify({"status": "error", "message": "Yeterli veri yok."})
+
         df = pd.DataFrame(formatted_data)
         features = ['ToprakNemi(%)', 'HavaSicakligi(°C)', 'HavaNemi(%)', 'IsikYogunlugu(lux)', 'R', 'G', 'B']
         X = df[features]
         timestamps = df["time"].tolist()
 
+        # Ölçekleme ve tahmin
         X_scaled = scaler.transform(X)
         predictions = model.predict(X_scaled)
         probabilities = model.predict_proba(X_scaled)[:, 1]
 
+        # Tahminleri JSON olarak paketle
         results = []
         for i in range(len(predictions)):
             results.append({
@@ -110,6 +145,7 @@ def get_thingspeak_predictions():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+
 
 @app.route("/predict_litre", methods=["POST"])
 def predict_litre():

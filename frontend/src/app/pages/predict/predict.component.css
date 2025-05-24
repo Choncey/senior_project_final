@@ -1,0 +1,104 @@
+.predict-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+    background-color: #f1f3f6;
+    min-height: calc(100vh - 100px); /* navbar/footer dışında kalan alan */
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .predict-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    width: 100%;
+    max-width: 550px;
+  }
+  
+  .predict-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .predict-header img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+  
+  .predict-header h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin: 0;
+  }
+  
+  .predict-header p {
+    color: #666;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+  }
+  
+  input:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+  
+  .result {
+    margin-top: 25px;
+    padding: 14px;
+    background-color: #ecf0f1;
+    border-left: 5px solid #2ecc71;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .error {
+    margin-top: 25px;
+    color: #e74c3c;
+    font-weight: bold;
+  }
+  

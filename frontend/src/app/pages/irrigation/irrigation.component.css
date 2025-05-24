@@ -1,0 +1,74 @@
+.sulama-wrapper {
+    padding: 50px 20px;
+    max-width: 1000px;
+    margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9fafe;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  
+  .header h1 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin: 0;
+  }
+  
+  .header .icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .sulama-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sulama-table th {
+    background: linear-gradient(to right, #00695c, #00897b);
+    color: white;
+    padding: 14px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  .sulama-table td {
+    padding: 14px;
+    text-align: center;
+    font-size: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .sulama-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .etiket-kirmizi {
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .etiket-yesil {
+    background-color: #2ecc71;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  

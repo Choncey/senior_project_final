@@ -1,0 +1,39 @@
+<div class="predict-wrapper">
+    <div class="predict-card">
+      <div class="predict-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/1771/1771399.png" alt="Su Damlası İkonu" />
+        <h2>Sulama Tahmini</h2>
+        <p>Toprak ve çevresel verilerinize göre gerekli su miktarını hesaplayın.</p>
+      </div>
+  
+      <form (ngSubmit)="onSubmit()" #formRef="ngForm">
+        <div class="form-group">
+          <label>Toprak Nemi (%)</label>
+          <input type="number" [(ngModel)]="inputData['ToprakNemi(%)']" name="toprak" required />
+        </div>
+        <div class="form-group">
+          <label>Hava Sıcaklığı (°C)</label>
+          <input type="number" [(ngModel)]="inputData['HavaSicakligi(°C)']" name="sicaklik" required />
+        </div>
+        <div class="form-group">
+          <label>Hava Nemi (%)</label>
+          <input type="number" [(ngModel)]="inputData['HavaNemi(%)']" name="hava" required />
+        </div>
+        <div class="form-group">
+          <label>Işık Yoğunluğu (lux)</label>
+          <input type="number" [(ngModel)]="inputData['IsikYogunlugu(lux)']" name="isik" required />
+        </div>
+  
+        <button type="submit" [disabled]="formRef.invalid">💧 Tahmin Et</button>
+      </form>
+  
+      <div *ngIf="predictedLitre !== null" class="result">
+        🚿 Tahmini Su Miktarı: <strong>{{ predictedLitre.toFixed(2) }} litre</strong>
+      </div>
+  
+      <div *ngIf="errorMessage" class="error">
+        ⚠️ {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+  

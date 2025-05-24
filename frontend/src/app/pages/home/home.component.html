@@ -1,71 +1,87 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Akıllı Sulama Sistemi</title>
+
+  <!-- Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* Genel Stil */
+    /* Genel ayarlar */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f5f7fa, #e0f2f1);
       color: #333;
     }
 
-    /* Header */
-    .header {
-      background-color: #000;
-      color: #fff;
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Havalı başlık stilleri */
+    header {
+      background: linear-gradient(to right, #00695c, #00897b);
       text-align: center;
-      padding: 4rem 1rem;
+      padding: 3rem 2rem;
     }
 
-    .header h1 {
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ffffff, #b2dfdb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 2s ease-out;
       margin: 0;
-      font-size: 3.5rem;
-      font-weight: bold;
-      color: #ffffff;
     }
 
-    .header p {
-      font-size: 1.2rem;
+    header p {
+      font-size: 1.1rem;
+      color: #e0f2f1;
       margin-top: 1rem;
     }
 
-    /* Kart Alanı */
-    .cards {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin: 3rem auto;
-      max-width: 1200px;
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
+      padding: 4rem 3rem;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .card {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: white;
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
       text-align: center;
-      padding: 2rem;
-      width: 300px;
-      cursor: pointer; /* Kartları tıklanabilir yapar */
       text-decoration: none;
       color: inherit;
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .card:hover {
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-      transform: translateY(-10px);
-    }
-
-    .card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: #333;
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
     }
 
     .card img {
@@ -73,57 +89,62 @@
       margin-bottom: 1rem;
     }
 
-    .card p {
-      color: #555;
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .card h3 {
+      margin: 0.5rem 0;
+      font-size: 1.25rem;
+      color: #00695c;
     }
 
-    /* Footer */
+    .card p {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
     footer {
-      background-color: #222;
+      background-color: #004d40;
       color: #ddd;
       text-align: center;
       padding: 1rem;
-      margin-top: 2rem;
       font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <div class="header">
-    <h1>Akıllı Sulama Sistemi</h1>
-    <p>Verilerinizi analiz edin, görselleştirin ve sulama durumunu kontrol edin.</p>
+  <div class="container">
+    <header>
+      <h1>Akıllı Sulama Sistemi</h1>
+      <p>Verilerinizi analiz edin, görselleştirin ve sulama ihtiyacınızı yönetin.</p>
+    </header>
+
+    <div class="main">
+      <a href="/data" class="card">
+        <img src="https://img.icons8.com/fluency/96/plant-under-sun.png" alt="Veri Seti">
+        <h3>Veri Seti</h3>
+        <p>Toprak nemi, sıcaklık ve ışık yoğunluğu verilerini detaylı inceleyin.</p>
+      </a>
+
+      <a href="/graph" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/4613/4613652.png" alt="Grafikler">
+        <h3>Grafikler</h3>
+        <p>Verilerinizi görsel grafiklerle analiz edin.</p>
+      </a>
+
+      <a href="/irrigation" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1771/1771399.png" alt="Sulama Durumu">
+        <h3>Sulama Durumu</h3>
+        <p>Güncel sensör verileriyle sulama gereksinimlerini kontrol edin.</p>
+      </a>
+
+      <a href="/predict" class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/15159/15159868.png" alt="Sulama Tahmini">
+        <h3>Sulama Tahmini</h3>
+        <p>Toprak ve çevresel verilere göre harcanacak su miktarını tahmin edin.</p>
+      </a>
+    </div>
+
+    <footer>
+      © 2024 Akıllı Sulama Sistemi — Tüm Hakları Saklıdır
+    </footer>
   </div>
-
-  <!-- Kartlar -->
-  <div class="cards">
-    <!-- Veri Seti -->
-    <a href="/data" class="card">
-      <img src="https://img.icons8.com/fluency/96/000000/plant-under-sun.png" alt="Veri Seti">
-      <h3>Veri Seti</h3>
-      <p>Toprak nemi, sıcaklık ve ışık yoğunluğu verilerini detaylı inceleyin.</p>
-    </a>
-
-    <!-- Grafikler -->
-    <a href="/graph" class="card">
-      <img src="https://img.icons8.com/fluency/96/000000/combo-chart.png" alt="Grafikler">
-      <h3>Grafikler</h3>
-      <p>Toprak nemi, sıcaklık ve ışık yoğunluğu grafiklerini görselleştirin.</p>
-    </a>
-
-    <!-- Sulama Durumu -->
-    <a href="/irrigation" class="card">
-      <img src="https://img.icons8.com/fluency/96/000000/watering-can.png" alt="Sulama Durumu">
-      <h3>Sulama Durumu</h3>
-      <p>Toprağın sulama gereksinimlerini analiz edin ve kontrol edin.</p>
-    </a>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    © 2024 Akıllı Sulama Sistemi | Tüm Hakları Saklıdır
-  </footer>
 </body>
 </html>

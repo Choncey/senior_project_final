@@ -20,9 +20,12 @@ export class ApiService {
   }
 
   getIrrigation(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/irrigation`);
+    return this.http.get(`http://localhost:5000/thingspeak`);
   }
   getAllGraphs(): Observable<any> { // <-- Bu metodu ekledik
     return this.http.get(`${this.baseUrl}/graph/all`);
   }
+  getPredictLiter(data: any): Observable<any> {
+    return this.http.post<any>('http://localhost:5000/predict_litre', data);
+}
 }
